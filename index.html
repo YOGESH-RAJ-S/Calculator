@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attractive Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f3ec78, #af4261);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .calculator {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      max-width: 400px;
+      width: 90%;
+      padding: 20px;
+    }
+
+    .calculator-display {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: right;
+      padding: 20px;
+      color: #1f2937;
+      margin-bottom: 20px;
+      height: 80px;
+    }
+
+    .calculator-keys {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .button {
+      background: #e5e7eb;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .button:hover {
+      background: #d1d5db;
+      transform: scale(1.05);
+    }
+
+    .button.operator {
+      background: #6366f1;
+      color: #ffffff;
+    }
+
+    .button.operator:hover {
+      background: #4f46e5;
+    }
+
+    .button.equal {
+      background: #f59e0b;
+      color: #ffffff;
+      grid-column: span 4;
+    }
+
+    .button.equal:hover {
+      background: #d97706;
+    }
+
+    @media (max-width: 480px) {
+      .calculator-display {
+        font-size: 2rem;
+        padding: 15px;
+      }
+
+      .button {
+        font-size: 1rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="calculator-display" id="display">0</div>
+    <div class="calculator-keys">
+      <button class="button" onclick="appendNumber('7')">7</button>
+      <button class="button" onclick="appendNumber('8')">8</button>
+      <button class="button" onclick="appendNumber('9')">9</button>
+      <button class="button operator" onclick="setOperator('/')">÷</button>
+
+      <button class="button" onclick="appendNumber('4')">4</button>
+      <button class="button" onclick="appendNumber('5')">5</button>
+      <button class="button" onclick="appendNumber('6')">6</button>
+      <button class="button operator" onclick="setOperator('*')">×</button>
+
+      <button class="button" onclick="appendNumber('1')">1</button>
+      <button class="button" onclick="appendNumber('2')">2</button>
+      <button class="button" onclick="appendNumber('3')">3</button>
+      <button class="button operator" onclick="setOperator('-')">−</button>
+
+      <button class="button" onclick="appendNumber('0')">0</button>
+      <button class="button" onclick="appendNumber('.')">.</button>
+      <button class="button" onclick="clearDisplay()">C</button>
+      <button class="button operator" onclick="setOperator('+')">+</button>
+
+      <button class="button equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+    let currentOperand = '';
+    let previousOperand = '';
+    let operator = null;
+
+    function appendNumber(number) {
+      if (currentOperand.includes('.') && number === '.') return;
+      currentOperand += number;
+      updateDisplay();
+    }
+
+    function setOperator(op) {
+      if (currentOperand === '') return;
+      if (previousOperand !== '') calculate();
+      operator = op;
+      previousOperand = currentOperand;
+      currentOperand = '';
+    }
+
+    function clearDisplay() {
+      currentOperand = '';
+      previousOperand = '';
+      operator = null;
+      updateDisplay();
+    }
+
+    function calculate() {
+      let computation;
+      const prev = parseFloat(previousOperand);
+      const current = parseFloat(currentOperand);
+      if (isNaN(prev) || isNaN(current)) return;
+      switch (operator) {
+        case '+':
+          computation = prev + current;
+          break;
+        case '-':
+          computation = prev - current;
+          break;
+        case '*':
+          computation = prev * current;
+          break;
+        case '/':
+          computation = prev / current;
+          break;
+        default:
+          return;
+      }
+      currentOperand = computation;
+      operator = null;
+      previousOperand = '';
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      display.textContent = currentOperand || '0';
+    }
+
+    clearDisplay();
+  </script>
+</body>
+</html>
